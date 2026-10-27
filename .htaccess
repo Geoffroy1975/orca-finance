@@ -1,0 +1,40 @@
+# Orca Finance — configuration Apache (hébergement OVH)
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirection vers HTTPS et vers l'adresse sans www.
+  # À ACTIVER (retirer les # des 3 lignes) une fois le certificat SSL actif sur l'hébergement.
+  # RewriteCond %{SERVER_PORT} 80 [OR]
+  # RewriteCond %{HTTP_HOST} ^www\.orca-finance\.fr$ [NC]
+  # RewriteRule ^(.*)$ https://orca-finance.fr/$1 [L,R=301]
+
+  # Anciennes adresses du site WordPress
+  RewriteRule ^politique-de-confidentialite/?$ /confidentialite.html [L,R=301]
+  RewriteRule ^politique-de-cookies/?$ /confidentialite.html [L,R=301]
+  RewriteRule ^(wp-admin|wp-login\.php|wp-content|wp-includes|xmlrpc\.php|feed)(/.*)?$ / [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml
+</IfModule>
